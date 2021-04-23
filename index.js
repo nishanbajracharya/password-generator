@@ -1,4 +1,4 @@
-const { getCharacterCount, shuffle } = require('./util');
+const { shuffle } = require('./util');
 
 const numbers = '0123456789';
 const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
@@ -14,15 +14,13 @@ const DEFAULT_OPTIONS = {
   length: 8,
 };
 
-const MIN_ADDITIONAL_CHARACTERS = 2;
-
 function generate(options = {}) {
   const completeOptions = { ...DEFAULT_OPTIONS, ...options };
 
-  let requiredLength = completeOptions.length - MIN_ADDITIONAL_CHARACTERS;
-
-  if (requiredLength < 1)
-    requiredLength = DEFAULT_OPTIONS.length - MIN_ADDITIONAL_CHARACTERS;
+  let requiredLength =
+    completeOptions.length < 1
+      ? DEFAULT_OPTIONS.length
+      : completeOptions.length;
 
   let allCharacters = '';
 
@@ -37,41 +35,14 @@ function generate(options = {}) {
 
   let password = shuffledSet.slice(0, requiredLength);
 
-  for (let i = 0; i < MIN_ADDITIONAL_CHARACTERS; i++) {
-    let characters = [];
-
-    if (completeOptions.numbers) characters.push(numbers);
-    if (completeOptions.lowerCase) characters.push(lowerCaseLetters);
-    if (completeOptions.upperCase) characters.push(upperCaseLetters);
-    if (completeOptions.symbols) characters.push(symbols);
-
-    let characterPercent = [];
-
-    characters.forEach((set) => {
-      const percent = getCharacterCount(password, set) / password.length;
-
-      characterPercent.push(percent);
-    });
-
-    const minPercent = Math.min(...characterPercent);
-
-    const minCharacterIndex = characterPercent.findIndex(
-      (index) => index === minPercent
-    );
-
-    let characterSet = characters[minCharacterIndex];
-
-    characterSet = shuffle(characterSet);
-
-    password += characterSet[0];
-  }
-
-  const remainingCharacters = completeOptions.length - password.length;
+  const remainingCharacters = requiredLength - password.length;
 
   if (remainingCharacters > 0) {
-    allCharacters = shuffle(allCharacters);
+    for (let i = 0; i < remainingCharacters; i++) {
+      allCharacters = shuffle(allCharacters);
 
-    password += allCharacters.slice(0, remainingCharacters);
+      password += allCharacters[0];
+    }
   }
 
   return shuffle(password);
