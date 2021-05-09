@@ -3,8 +3,7 @@ const { shuffle } = require('./util');
 const numbers = '0123456789';
 const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
 const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const symbols = `_%$@!-`;
-// const allSymbols = `~!@#$%^&*()_+-={}[]\|;:'"<>?,./\``;
+const symbols = `!"#$%&'()*+,-./:;<=>?@[]^_{|}~`;
 
 const DEFAULT_OPTIONS = {
   numbers: false,
